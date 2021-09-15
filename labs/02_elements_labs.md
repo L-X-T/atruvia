@@ -21,7 +21,7 @@ In this lab, you will mainly work within the ``dashboard`` app in your monorepo.
 1. Install @angular/elements:
 
     ```
-    npm i / yarn add @angular/elements@11.2.14
+    ng add @angular/elements
 
     ```
 
