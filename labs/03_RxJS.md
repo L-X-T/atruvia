@@ -283,7 +283,7 @@ In this example, you'll introduce another observable that simulates the network 
                         startWith(0),
                         map(_ => Math.random() < 0.5),
                         distinctUntilChanged(),
-                        tap(value => this.online = value)
+                        tap((value: boolean) => this.online = value)
                 );
         [...]
     }
@@ -326,7 +326,7 @@ In this example, you'll introduce another observable that simulates the network 
                 startWith(0),
                 map(_ => Math.random() < 0.5),
                 distinctUntilChanged(),
-                tap(value => this.online = value)
+                tap((value: boolean) => this.online = value)
         );
 
     const input$ = this.control.valueChanges.pipe(
