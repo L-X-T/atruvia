@@ -11,7 +11,9 @@ import { debounceTime, distinctUntilChanged, filter, map, pairwise, startWith, s
   styleUrls: ['./flight-lookahead.component.css']
 })
 export class FlightLookaheadComponent implements OnInit {
-  control: FormControl;
+  fromControl: FormControl;
+  toControl: FormControl;
+
   flights$: Observable<Flight[]>;
   diff$: Observable<number>;
   loading: boolean;
@@ -22,8 +24,21 @@ export class FlightLookaheadComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.control = new FormControl();
-    const input$ = this.control.valueChanges.pipe(debounceTime(300));
+    /*this.control = new FormControl();
+    const input$ = this.control.valueChanges.pipe(debounceTime(300));*/
+
+    this.fromControl = new FormControl();
+    const fromInput$ = this.fromControl.valueChanges.pipe(
+      debounceTime(300),
+      // filter((input) => input.length > 2),
+      distinctUntilChanged()
+    );
+
+    this.toControl = new FormControl();
+    const toInput$ = this.toControl.valueChanges.pipe(
+      // filter((input) => input.length > 2),
+      distinctUntilChanged()
+    );
 
     /*this.flights$ = this.control.valueChanges.pipe(
       debounceTime(300),
@@ -41,12 +56,12 @@ export class FlightLookaheadComponent implements OnInit {
       tap((value) => (this.online = value))
     );
 
-    this.flights$ = combineLatest([input$, this.online$]).pipe(
-      filter(([, online]) => online),
-      map(([input]) => input),
-      tap((input) => (this.loading = true)),
-      switchMap((input: string) => this.load(input)),
-      tap((v) => (this.loading = false))
+    this.flights$ = combineLatest([fromInput$, toInput$, this.online$]).pipe(
+      filter(([f, t, online]) => (f || t) && online),
+      map(([from, to, _]) => [from, to]),
+      tap(([from, to]) => (this.loading = true)),
+      switchMap(([from, to]) => this.load(from, to)),
+      tap((a) => (this.loading = false))
     );
 
     this.diff$ = this.flights$.pipe(
@@ -55,9 +70,9 @@ export class FlightLookaheadComponent implements OnInit {
     );
   }
 
-  load(from: string): Observable<Flight[]> {
+  load(from: string, to: string = ''): Observable<Flight[]> {
     const url = 'http://www.angular.at/api/flight';
-    const params = new HttpParams().set('from', from);
+    const params = new HttpParams().set('from', from).set('to', to);
     const headers = new HttpHeaders().set('Accept', 'application/json');
 
     return this.http.get<Flight[]>(url, { params, headers });
