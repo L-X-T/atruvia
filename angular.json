@@ -487,7 +487,9 @@
             "customWebpackConfig": {
               "path": "apps/flight-app/webpack.config.js"
             },
-            "commonChunk": false
+            "commonChunk": false,
+            "serviceWorker": true,
+            "ngswConfigPath": "apps/flight-app/ngsw-config.json"
           },
           "configurations": {
             "production": {

@@ -30,7 +30,25 @@ In this lab, you will upgrade your case study to a progressive web app. For this
 
     If ngx-build-plus is not installed in your setup, this step will not replace anything.
 
-1. Install the package ``@angular/pwa``:
+2. If you've implemented the module federation, restore your ``main.ts`` file, so that ``@angular/pwa`` will be able to setup everything correctly.
+
+   ```TypeScript
+   import { enableProdMode } from '@angular/core';
+   import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+   import { AppModule } from './app/app.module';
+   import { environment } from './environments/environment';
+
+   if (environment.production) {
+     enableProdMode();
+   }
+
+   platformBrowserDynamic().bootstrapModule(AppModule);
+   ```
+
+   If you haven't done the MF exercise, this step is not necessary. If you want you can restore your module federation later.
+
+3. Install the package ``@angular/pwa``:
 
     ```
     ng add @angular/pwa
@@ -38,42 +56,42 @@ In this lab, you will upgrade your case study to a progressive web app. For this
 
     **IMPORTANT**: If this step DOES NOT update your ``index.html`` call your trainer.
 
-2. Open your ``app.module.ts`` and find out that the ``ServiceWorkerModule`` has been imported.
+4. Open your ``app.module.ts`` and find out that the ``ServiceWorkerModule`` has been imported.
 
-3. Open the generated file ``ngsw-config.json`` and find out that it makes the ``@angular/service-worker`` to cache all the bundles and assets.
+5. Open the generated file ``ngsw-config.json`` and find out that it makes the ``@angular/service-worker`` to cache all the bundles and assets.
 
-4. Open the ``manifest.webmanifest`` and have a look at the entries. This file contains the web app manifest.
+6. Open the ``manifest.webmanifest`` and have a look at the entries. This file contains the web app manifest.
 
-5. Create a production build as ``@angular/service-worker`` only uses the cache in production mode.
+7. Create a production build as ``@angular/service-worker`` only uses the cache in production mode.
 
     ```
     ng build --prod --project flight-app
     ```
 
-6. Install ``serve``, a simple command line based web server for testing:
+8. Install ``serve``, a simple command line based web server for testing:
 
     ```
     npm i -g serve
     ```
-7. Switch into your workspace root and start the serve:
+9. Switch into your workspace root and start the serve:
 
     ```
     serve dist/apps/flight-app -s
     ```
 
-8. Open your browser and navigate to the address serve is using (http://localhost:5000 by default)
+10. Open your browser and navigate to the address serve is using (http://localhost:5000 by default)
 
-    If you get another application here, uninstall the service worker in the dev tools (``Application | Service Worker``) and refresh your page.
+     If you get another application here, uninstall the service worker in the dev tools (``Application | Service Worker``) and refresh your page.
 
-9.  Open the developer tools and switch to ``Application | Service Worker``. Assure yourself that your service worker runs. You should see its name (``ngsw-worker.js``) and its ``id``.
+11. Open the developer tools and switch to ``Application | Service Worker``. Assure yourself that your service worker runs. You should see its name (``ngsw-worker.js``) and its ``id``.
 
-10. In the developer tools,  switch to the ``Network`` tab. Reload the application and note the shown measure for ``DOMContentLoaded``.
+12. In the developer tools,  switch to the ``Network`` tab. Reload the application and note the shown measure for ``DOMContentLoaded``.
 
-11. Simulate ``Slow 3G`` and reload the application. Find out, that the time for ``DOMContentLoaded`` is similar as before.
+13. Simulate ``Slow 3G`` and reload the application. Find out, that the time for ``DOMContentLoaded`` is similar as before.
 
-12. Close the web server (``CTRL+C``) and reload the application. Find out, that it still works.
+14. Close the web server (``CTRL+C``) and reload the application. Find out, that it still works.
 
-13. In the developer tools, switch back to ``Application | Service Worker`` and remove the service worker by clicking at ``Unregister`` (!).
+15. In the developer tools, switch back to ``Application | Service Worker`` and remove the service worker by clicking at ``Unregister`` (!).
 
     After this, immediately close the browser to prevent that it gets reinstalled.
 
