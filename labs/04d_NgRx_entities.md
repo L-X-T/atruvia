@@ -64,7 +64,7 @@ In this exercise, you will leverage ``@ngrx/entity`` and ``@ngrx/schematics`` to
 
         passengers$: Observable<Passenger[]>;
 
-        ngOnInit() {
+        ngOnInit(): void {
             this.store.dispatch(addPassengers({ passengers: [{id: 1, name: 'Max'}, {id:2, name: 'Susi'}]}));
             this.passengers$ = this.store.select(selectAllPassengers);
         }

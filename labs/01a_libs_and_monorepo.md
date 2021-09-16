@@ -100,7 +100,7 @@ You can follow these steps:
         constructor(private airportService: AirportService) { 
         }
 
-        ngOnInit() {
+        ngOnInit(): void {
             this.airportService.findAll().subscribe(airports => {
             this.airports = airports;
             });

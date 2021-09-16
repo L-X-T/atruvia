@@ -130,16 +130,12 @@ As you see in this URL, the API takes an parameter for filtering flights with re
     ```TypeScript
     load(from: string):Observable<Flight[]>  {
         const url = "http://www.angular.at/api/flight";
-
-        const params = new HttpParams()
-                            .set('from', from);
-
-        const headers = new HttpHeaders()
-                            .set('Accept', 'application/json');
+        const params = new HttpParams().set('from', from);
+        const headers = new HttpHeaders().set('Accept', 'application/json');
 
         return this.http.get<Flight[]>(url, {params, headers});
 
-    };
+    }
     ```
 
     </p>
@@ -273,13 +269,13 @@ In this example, you'll introduce another observable that simulates the network 
 
 1. Add the following properties to your component:
 
-    - ``online: boolean = false``;
+    - ``online = false``;
     - ``online$: Observable<boolean>``;
 
 2. Add the following lines to your ``ngOnInit`` method.
 
     ```TypeScript
-    ngOnInit() {
+    ngOnInit(): void {
         this.control = new FormControl();
 
         this.online$ 
