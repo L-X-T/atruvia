@@ -291,7 +291,7 @@ In this lab you will use the ``SwPush`` service to subscribe to your browser's p
     This key is used by the Browser's push service to verify that the push message was sent by your back end.
 
     ```TypeScript
-    setupPush() {
+    setupPush(): void {
 
         const key = 'BBc7Bb5f5CRJp7cx19kPHz5d9S5jFSzogxEj2V1C44WuhTwd78tnXLPzOxGe0bUmKJUTAMemSKFzyQjSBN_-XyE';
 
