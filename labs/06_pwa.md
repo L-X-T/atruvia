@@ -146,7 +146,7 @@ In this part of the lab, you will leverage the update service (``SwUpdate``) for
 4. Add a method ``setupUpdates`` to the ``AppComponent``. It shall setup all events needed to activate a new application version and check for updates.
 
     ```TypeScript
-    setupUpdates() {
+    setupUpdates(): void {
         this.swUpdate.available.subscribe(u => {
             this.swUpdate.activateUpdate().then(e => {
                 this.snackBar.open("App updated -- please reload!", "OK");
