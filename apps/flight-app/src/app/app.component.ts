@@ -16,7 +16,26 @@ export class AppComponent {
 
     // this.authLibService.login('Alex', '');
 
+    this.installOnDesktop();
+
     this.setupUpdates();
+  }
+
+  installOnDesktop(): void {
+    if (typeof window === 'object') {
+      window.addEventListener('beforeinstallprompt', (e: any) => {
+        console.debug('beforeinstallprompt');
+
+        this.snackBar
+          .open('Install on Desktop?', 'OK')
+          .onAction()
+          .subscribe((_) => {
+            e.prompt();
+          });
+
+        e.userChoice.then((choice) => console.debug('user choice', choice));
+      });
+    }
   }
 
   setupUpdates(): void {
