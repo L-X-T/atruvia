@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Flight, FlightService } from '@flight-workspace/flight-lib';
 import { Store } from '@ngrx/store';
 import { FlightBookingAppState } from '../+state/flight-booking.reducer';
@@ -8,13 +8,15 @@ import { loadFlights, updateFlight } from '../+state/flight-booking.actions';
 import { take } from 'rxjs/operators';
 import { selectFlightsWithProps } from '../+state/flight-booking.selectors';
 import { LocalBasketService } from '../local-basket.service';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'flight-search',
   templateUrl: './flight-search.component.html',
   styleUrls: ['./flight-search.component.css']
 })
-export class FlightSearchComponent implements OnInit {
+export class FlightSearchComponent implements OnInit, OnDestroy {
   from = 'Hamburg'; // in Germany
   to = 'Graz'; // in Austria
   urgent = false;
@@ -26,17 +28,31 @@ export class FlightSearchComponent implements OnInit {
 
   flights$ = this.store.select(selectFlightsWithProps({ blackList: [3] }));
 
+  locale = 'de'; // caution: for the sake of simplicity we use language as locale here
+  private localeSubscription: Subscription;
+
   constructor(
     private flightService: FlightService,
     private localBasketService: LocalBasketService,
-    private store: Store<FlightBookingAppState>
+    private store: Store<FlightBookingAppState>,
+    private translateService: TranslateService
   ) {}
 
   get flights(): Flight[] {
     return this.flightService.flights;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.localeSubscription = this.translateService.onLangChange.subscribe((langChangeEvent: LangChangeEvent) => {
+      this.locale = langChangeEvent.lang;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.localeSubscription) {
+      this.localeSubscription.unsubscribe();
+    }
+  }
 
   search(): void {
     if (!this.from || !this.to) return;
