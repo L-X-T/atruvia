@@ -26,5 +26,18 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "cacheConfig": {
+        "maxAge": "12h",
+        "maxSize": 200,
+        "strategy": "freshness"
+      },
+      "urls": [
+        "http://www.angular.at/api/**"
+      ]
+    }
   ]
 }
