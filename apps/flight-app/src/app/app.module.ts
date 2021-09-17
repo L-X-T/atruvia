@@ -1,5 +1,5 @@
 import { FlightCancellingModule } from './flight-booking/flight-cancelling/flight-cancelling.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,6 +25,12 @@ import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { PassengersModule } from './passengers/passengers.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
+}
 
 @NgModule({
   imports: [
@@ -50,13 +56,21 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     EffectsModule.forRoot([]),
 
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: true,
+      enabled: environment.production,
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
 
-    MatSnackBarModule
+    MatSnackBarModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [AppComponent, SidebarComponent, NavbarComponent, HomeComponent, BasketComponent, FlightLookaheadComponent],
   providers: [],

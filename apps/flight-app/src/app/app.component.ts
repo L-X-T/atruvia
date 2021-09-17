@@ -3,6 +3,8 @@ import { LoggerService } from '@flight-workspace/logger-lib';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 // import { AuthLibService } from '@flight-workspace/shared/auth-lib';
+import { TranslateService } from '@ngx-translate/core';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'flight-app',
@@ -10,17 +12,29 @@ import { SwPush, SwUpdate } from '@angular/service-worker';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private loggerService: LoggerService, private snackBar: MatSnackBar, private swUpdate: SwUpdate, private swPush: SwPush) {
+  constructor(
+    private loggerService: LoggerService,
+    private snackBar: MatSnackBar,
+    private swUpdate: SwUpdate,
+    private swPush: SwPush,
+    private translateService: TranslateService
+  ) {
     this.loggerService.log('log');
     this.loggerService.debug('debug');
 
     // this.authLibService.login('Alex', '');
 
-    this.installOnDesktop();
+    if (environment.production) {
+      this.installOnDesktop();
 
-    this.setupUpdates();
+      this.setupUpdates();
 
-    this.setupPush();
+      this.setupPush();
+    }
+
+    this.translateService.addLangs(['en', 'de']);
+    this.translateService.setDefaultLang('de');
+    this.translateService.use('de');
   }
 
   installOnDesktop(): void {
