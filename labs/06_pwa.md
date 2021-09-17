@@ -482,15 +482,15 @@ In this lab, you'll save your shopping basket into an ``indexeddb`` for offline 
     ```TypeScript
     saveBasket(): void {
         this.localBasketService.save(this.basket).then(
-            _ => console.debug('successfully saved basket"'),
+            _ => console.debug('successfully saved basket'),
             err => console.error('error saving basket', err)
         )
     }
 
     loadBasket(): void {
         this.localBasketService.load().then(
-            basket => { this.basket = basket; },
-            err => console.error('error loading basket', err)
+            (basket: { [id: number]: boolean }) => { this.basket = basket; },
+            (err) => console.error('error loading basket', err)
         );
     }
     ```

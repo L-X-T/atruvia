@@ -7,6 +7,7 @@ import { FlightBookingAppState } from '../+state/flight-booking.reducer';
 import { loadFlights, updateFlight } from '../+state/flight-booking.actions';
 import { take } from 'rxjs/operators';
 import { selectFlightsWithProps } from '../+state/flight-booking.selectors';
+import { LocalBasketService } from '../local-basket.service';
 
 @Component({
   selector: 'flight-search',
@@ -25,7 +26,11 @@ export class FlightSearchComponent implements OnInit {
 
   flights$ = this.store.select(selectFlightsWithProps({ blackList: [3] }));
 
-  constructor(private flightService: FlightService, private store: Store<FlightBookingAppState>) {}
+  constructor(
+    private flightService: FlightService,
+    private localBasketService: LocalBasketService,
+    private store: Store<FlightBookingAppState>
+  ) {}
 
   get flights(): Flight[] {
     return this.flightService.flights;
@@ -68,5 +73,21 @@ export class FlightSearchComponent implements OnInit {
 
       this.store.dispatch(updateFlight({ flight: newFlight }));
     });
+  }
+
+  saveBasket(): void {
+    this.localBasketService.save(this.basket).then(
+      (_) => console.debug('successfully saved basket'),
+      (err) => console.error('error saving basket', err)
+    );
+  }
+
+  loadBasket(): void {
+    this.localBasketService.load().then(
+      (basket: { [id: number]: boolean }) => {
+        this.basket = basket;
+      },
+      (err) => console.error('error loading basket', err)
+    );
   }
 }
